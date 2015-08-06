@@ -7,10 +7,14 @@ int main(int argc, char **argv) {
 	ros::init(argc, argv, "viconros");
 	ros::NodeHandle n;
 	ros::Publisher vicon_pub = n.advertise<viconros::viconmocap>("vicon", 1000);
-	ros::Rate loop_rate(1);
+	ros::Rate loop_rate(50);
 	int count = 0;
 	CFetchViconData * vicon=new CFetchViconData();
-	const char * host="192.168.2.102:801";
+
+	memcpy(vicon->model[0],"quadmodel",sizeof("quadmodel"));
+	memcpy(vicon->segment[0],"whole",sizeof("whole"));
+	ROS_INFO("Model:%s;Segment:%s",vicon->model[0],vicon->segment[0]);
+	const char * host="192.168.2.100:801";
 	ObjStatus objs;
 	if(!(vicon->IsConnected))
     { 
