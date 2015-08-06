@@ -1,11 +1,12 @@
 #include "ros/ros.h"
 #include "std_msgs/Float32.h"
+#include "viconros/viconmocap.h"
 #include <sstream>
 #include "CFetchViconData.h"
 int main(int argc, char **argv) {
 	ros::init(argc, argv, "viconros");
 	ros::NodeHandle n;
-	ros::Publisher vicon_pub = n.advertise<std_msgs::Float32>("vicon", 1000);
+	ros::Publisher vicon_pub = n.advertise<viconros::viconmocap>("vicon", 1000);
 	ros::Rate loop_rate(1);
 	int count = 0;
 	CFetchViconData * vicon=new CFetchViconData();
@@ -27,10 +28,15 @@ int main(int argc, char **argv) {
 
     }
 	while (ros::ok()) {
-		std_msgs::Float32 msg;
+		viconros::viconmocap msg;
 		objs=vicon->GetStatus(0);
-		msg.data =objs.pos[0];
-		ROS_INFO("%f", msg.data);
+		msg.position.x =objs.pos[0];
+		msg.position.y =objs.pos[1];
+		msg.position.z =objs.pos[2];
+		msg.velocity.x =objs.vel[0];
+		msg.velocity.y =objs.vel[1];
+		msg.velocity.z =objs.vel[2];
+		ROS_INFO("position:%f-%f-%f; velocity: %f-%f-%f", msg.position.x,msg.position.y,msg.position.z,msg.velocity.x,msg.velocity.y,msg.velocity.z);
 		vicon_pub.publish(msg);
 		ros::spinOnce();
 		loop_rate.sleep();
