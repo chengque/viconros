@@ -30,6 +30,7 @@ int main(int argc, char **argv) {
 	while (ros::ok()) {
 		viconros::viconmocap msg;
 		objs=vicon->GetStatus(0);
+		msg.time=objs.tm;
 		msg.position.x =objs.pos[0];
 		msg.position.y =objs.pos[1];
 		msg.position.z =objs.pos[2];

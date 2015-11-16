@@ -15,7 +15,6 @@
 		<arg name="tgt_component" value="$(arg tgt_component)" />
 		<arg name="log_output" value="$(arg log_output)" />
 	</include>
-	<node pkg="viconros" type="viconros" name="viconros"/>
 	<node name="viconros" pkg="viconros" type="viconros" />
 	<node name="record" pkg="rosbag" type="record" args="record -O /home/chengque/rec.bag -a "/>
 </launch>
