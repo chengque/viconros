@@ -25,11 +25,10 @@ class CFetchViconData
         double segOrg[3];
         
     public:
-        char model[10][10],segment[10][10];
         char host[50];
         int segCount;
         bool Connect(const char * Hostname);
-        struct ObjStatus GetStatus(int i);
+        struct ObjStatus GetStatus(const char *, const char *);
         bool Disconnect();
         bool IsConnected;
         char * GetModelName(int i);

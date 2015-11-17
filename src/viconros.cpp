@@ -2,15 +2,24 @@
 #include "std_msgs/Float32.h"
 #include "viconros/viconmocap.h"
 #include <sstream>
+#include <string.h>
 #include "CFetchViconData.h"
 int main(int argc, char **argv) {
 	ros::init(argc, argv, "viconros");
-	ros::NodeHandle n;
+	ros::NodeHandle n("~");
+	std::string ip;
+	std::string model;
+	std::string segment;
+	n.getParam("host",ip);
+	n.getParam("model",model);
+	n.getParam("segment",segment);
+	ROS_INFO("HOST:%s",ip.c_str());
+	ROS_INFO("MODEL:%s; SEGMENT:%s",model.c_str(),segment.c_str());
 	ros::Publisher vicon_pub = n.advertise<viconros::viconmocap>("vicon", 1000);
 	ros::Rate loop_rate(1);
 	int count = 0;
 	CFetchViconData * vicon=new CFetchViconData();
-	const char * host="192.168.2.102:801";
+	const char * host=ip.c_str();
 	ObjStatus objs;
 	if(!(vicon->IsConnected))
     { 
@@ -29,7 +38,7 @@ int main(int argc, char **argv) {
     }
 	while (ros::ok()) {
 		viconros::viconmocap msg;
-		objs=vicon->GetStatus(0);
+		objs=vicon->GetStatus(model.c_str(),segment.c_str());
 		msg.time=objs.tm;
 		msg.position.x =objs.pos[0];
 		msg.position.y =objs.pos[1];

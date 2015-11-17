@@ -69,7 +69,7 @@ bool CFetchViconData::Disconnect()
 	return true;
 }
 
-ObjStatus CFetchViconData::GetStatus(int i)
+ObjStatus CFetchViconData::GetStatus(const char * model,const char * segment)
 {
     
 	ObjStatus s;
@@ -85,9 +85,9 @@ ObjStatus CFetchViconData::GetStatus(int i)
     }
     
     Output_GetSegmentGlobalTranslation _Output_GetSegmentGlobalTranslation = 
-          client.GetSegmentGlobalTranslation( model[i], segment[i] );/*;("Patient","Foot")*/
+          client.GetSegmentGlobalTranslation( model, segment );/*;("Patient","Foot")*/
     
-    Output_GetSegmentGlobalRotationMatrix Output_Rotation = client.GetSegmentGlobalRotationMatrix( model[i], segment[i] );
+    Output_GetSegmentGlobalRotationMatrix Output_Rotation = client.GetSegmentGlobalRotationMatrix( model, segment);
     
     if(_Output_GetSegmentGlobalTranslation.Result!=Result::Success)
     {
