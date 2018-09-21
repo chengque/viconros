@@ -16,11 +16,12 @@ int main(int argc, char **argv) {
 	ROS_INFO("HOST:%s",ip.c_str());
 	ROS_INFO("MODEL:%s; SEGMENT:%s",model.c_str(),segment.c_str());
 	ros::Publisher vicon_pub = n.advertise<viconros::viconmocap>("vicon", 1000);
-	ros::Rate loop_rate(1);
+	ros::Rate loop_rate(100);
 	int count = 0;
 	CFetchViconData * vicon=new CFetchViconData();
 	const char * host=ip.c_str();
 	ObjStatus objs;
+	
 	if(!(vicon->IsConnected))
     { 
             ROS_INFO("Connecting to %s",host);
