@@ -8,7 +8,9 @@ ObjStatus::ObjStatus()
             {
                 pos[i]=0;
                 vel[i]=0;
+                ort[i]=0;
             }
+            ort[4]=0;
             tm=0;
             res=false;   
 }
@@ -129,6 +131,22 @@ ObjStatus CFetchViconData::GetStatus(const char * model,const char * segment)
             s.vel[i]=(s.pos[i]-lastStatus.pos[i])/dt;
         }
     }
+
+
+    Output_GetSegmentGlobalRotationQuaternion Output_quat = client.GetSegmentGlobalRotationQuaternion( model, segment);
+
+    if(Output_quat.Result!=Result::Success)
+    {
+        s.res=false;
+        return s;
+    }
+    for(int i=0;i<4;i++)
+    {
+
+        s.ort[i]=Output_quat.Rotation[i];
+    }
+
+
     lastStatus=s;
    /* printf("Return the value...");*/
 	return s;

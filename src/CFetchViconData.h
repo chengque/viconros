@@ -9,6 +9,7 @@ class ObjStatus
 public:
 	double pos[3];
 	double vel[3];
+    double ort[4];
 	double tm;
     bool res;
     ObjStatus();

@@ -1,6 +1,6 @@
 #include "ros/ros.h"
 #include "std_msgs/Float32.h"
-#include "viconros/viconmocap.h"
+#include <geometry_msgs/PoseStamped.h> 
 #include <sstream>
 #include <string.h>
 #include "CFetchViconData.h"
@@ -15,7 +15,7 @@ int main(int argc, char **argv) {
 	n.getParam("segment",segment);
 	ROS_INFO("HOST:%s",ip.c_str());
 	ROS_INFO("MODEL:%s; SEGMENT:%s",model.c_str(),segment.c_str());
-	ros::Publisher vicon_pub = n.advertise<viconros::viconmocap>("vicon", 1000);
+	ros::Publisher vicon_pub = n.advertise<geometry_msgs::PoseStamped> ("/mocap/pose", 10);
 	ros::Rate loop_rate(100);
 	int count = 0;
 	CFetchViconData * vicon=new CFetchViconData();
@@ -38,20 +38,22 @@ int main(int argc, char **argv) {
 
     }
 	while (ros::ok()) {
-		viconros::viconmocap msg;
+		geometry_msgs::PoseStamped msg;
 		objs=vicon->GetStatus(model.c_str(),segment.c_str());
-		msg.time=objs.tm;
-		msg.position.x =objs.pos[0];
-		msg.position.y =objs.pos[1];
-		msg.position.z =objs.pos[2];
-		msg.velocity.x =objs.vel[0];
-		msg.velocity.y =objs.vel[1];
-		msg.velocity.z =objs.vel[2];
-		ROS_INFO("position:%f-%f-%f; velocity: %f-%f-%f", msg.position.x,msg.position.y,msg.position.z,msg.velocity.x,msg.velocity.y,msg.velocity.z);
+		msg.header.stamp.sec=(int)objs.tm;
+		msg.header.stamp.nsec=(objs.tm-msg.header.stamp.sec)*10000*10000;
+		msg.pose.position.x =objs.pos[0];
+		msg.pose.position.y =objs.pos[1];
+		msg.pose.position.z =objs.pos[2];
+		msg.pose.orientation.x =objs.ort[0];
+		msg.pose.orientation.y =objs.ort[1];
+		msg.pose.orientation.z =objs.ort[2];
+		msg.pose.orientation.w =objs.ort[3];
+		//ROS_INFO("position:%f-%f-%f; velocity: %f-%f-%f", msg.position.x,msg.position.y,msg.position.z,msg.velocity.x,msg.velocity.y,msg.velocity.z);
 		vicon_pub.publish(msg);
 		ros::spinOnce();
 		loop_rate.sleep();
-		++count;
+		//++count;
 	}
 	return 0;
 }
