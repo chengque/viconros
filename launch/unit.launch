@@ -4,5 +4,6 @@
 	<param name="model" value="quadmodel"/>
 	<param name="segment" value="whole"/>
 	</node>
+	<node name="xbee_send" pkg="xbee_com" type="xbee_send" output="screen"/>
 	<!--node name="record" pkg="rosbag" type="record" args="record -O /home/chengque/rec.bag -a "/-->
 </launch>
